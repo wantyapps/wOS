@@ -58,5 +58,5 @@ debug: os-image-debug.bin kernel.elf
 	nasm $< -f bin -o $@
 
 clean:
-	rm -rf *.bin *.dis *.o os-image.bin *.elf
+	rm -rf *.bin *.dis *.o os-image.bin *.elf *.iso
 	rm -rf kernel/*.o boot/*.bin drivers/*.o boot/*.o cpu/*.o

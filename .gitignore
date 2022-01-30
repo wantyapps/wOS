@@ -4,6 +4,9 @@
 *.bin
 
 kernel/*.o
+kernel/*.bin
 drivers/*.o
 boot/*.o
+boot/*.bin
 *.o
+*.iso
