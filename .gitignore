@@ -1,1 +1,9 @@
-boot.bin
+.ccls-cache
+*.elf
+*.img
+*.bin
+
+kernel/*.o
+drivers/*.o
+boot/*.o
+*.o
