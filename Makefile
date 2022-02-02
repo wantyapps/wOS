@@ -1,7 +1,14 @@
+VERSION = 1
+PATCHLEVEL = 0
+SUBLEVEL = 2
+EXTRAVERSION = -rc1
+
 C_SOURCES = $(wildcard kernel/*.c drivers/*.c cpu/*.c libc/*.c)
 HEADERS = $(wildcard kernel/*.h drivers/*.h cpu/*.h libc/*.h)
 # Nice syntax for file extension replacement
 OBJ = ${C_SOURCES:.c=.o} 
+
+DOC_NAMES := latexpdf html
 
 # Change this if your cross-compiler is somewhere else
 CC = i386-elf-gcc
@@ -57,6 +64,10 @@ debug: os-image-debug.bin kernel.elf
 %.bin: %.asm
 	nasm $< -f bin -o $@
 
+$(DOC_NAMES):
+	$(MAKE) -C Documentation $@
+
 clean:
 	rm -rf *.bin *.dis *.o os-image.bin *.elf *.iso
-	rm -rf kernel/*.o boot/*.bin drivers/*.o boot/*.o cpu/*.o
+	rm -rf kernel/*.o boot/*.bin drivers/*.o boot/*.o cpu/*.o libc/*.o
+	$(MAKE) -C Documentation clean

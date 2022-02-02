@@ -1,0 +1,9 @@
+The wOS kernel
+==============
+
+(heavily based off of torvalds/linux)
+
+This project's documentation is written in mostly (reStructuredText).
+
+To build the documentation use ``make html`` or `make latexpdf``
+They will be built into Documentation/build/<type>/
