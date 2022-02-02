@@ -1,6 +1,6 @@
 VERSION = 1
-PATCHLEVEL = 0
-SUBLEVEL = 2
+PATCHLEVEL = 1
+SUBLEVEL = 0
 EXTRAVERSION = -rc1
 
 C_SOURCES = $(wildcard kernel/*.c drivers/*.c cpu/*.c libc/*.c)
