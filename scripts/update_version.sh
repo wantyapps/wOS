@@ -14,7 +14,8 @@ FULL_VERSION="$VERSION.$PATCHLEVEL.$SUBLEVEL$EXTRAVERSION"
 echo "wOS version $VERSION.$PATCHLEVEL.$SUBLEVEL$EXTRAVERSION"
 
 read -ep "Autoag? [y/n]:" autotag
+read -ep "Message: " message
 
 if [ "$autotag" == "y" ]; then 
-	git tag -as "v$FULL_VERSION"
+	git tag -as "v$FULL_VERSION" -m "$message"
 fi
