@@ -1,29 +1,16 @@
-#!/bin/sh
-# I basically stole this script from torvalds/linux
+#!/bin/bash
 
-LF='
-'
+VERSION=$(grep '^VERSION[[:space:]]*=' ../../Makefile|tr -d 'VERSION= ')
+PATCHLEVEL=$(grep '^PATCHLEVEL[[:space:]]*=' ../../Makefile|tr -d 'PATCHLEVEL= ')
+SUBLEVEL=$(grep '^SUBLEVEL[[:space:]]*=' ../../Makefile|tr -d 'SUBLEVEL= ')
+EXTRAVERSION=$(grep '^EXTRAVERSION[[:space:]]*=' ../../Makefile|tr -d 'EXTRAVERSION= ')
 
-if test -d .git -o -f .git &&
-	VN=$(git describe --abbrev=4 HEAD 2>/dev/null) &&
-	case "$VN" in
-	*$LF*) (exit 1) ;;
-	v[0-9]*)
-		git update-index -q --refresh
-		test -z "$(git diff-index --name-only HEAD --)" ||
-		VN="$VN-dirty" ;;
-	esac
-then
-	VN=$(echo "$VN" | sed -e 's/-/./g');
-else
-	eval $(grep '^VERSION[[:space:]]*=' Makefile|tr -d ' ')
-	eval $(grep '^PATCHLEVEL[[:space:]]*=' Makefile|tr -d ' ')
-	eval $(grep '^SUBLEVEL[[:space:]]*=' Makefile|tr -d ' ')
-	eval $(grep '^EXTRAVERSION[[:space:]]*=' Makefile|tr -d ' ')
+FULL_VERSION="$VERSION.$PATCHLEVEL.$SUBLEVEL$EXTRAVERSION"
 
-	VN="v${VERSION}.${PATCHLEVEL}.${SUBLEVEL}${EXTRAVERSION}"
+echo "wOS version $VERSION.$PATCHLEVEL.$SUBLEVEL$EXTRAVERSION"
+
+read -ep "Autoag? [y/n]:" autotag
+
+if [ "$autotag" == "y" ]; then 
+	git tag -as "v$FULL_VERSION"
 fi
-
-VN=$(expr "$VN" : v*'\(.*\)')
-
-git tag -as "v$VN"

@@ -38,6 +38,24 @@ templates_path = ['templates']
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = []
 
+try:
+    makefile_version = None
+    makefile_patchlevel = None
+    for line in open('../Makefile'):
+        key, val = [x.strip() for x in line.split('=', 2)]
+        if key == 'VERSION':
+            makefile_version = val
+        elif key == 'PATCHLEVEL':
+            makefile_patchlevel = val
+        if makefile_version and makefile_patchlevel:
+            break
+except:
+    pass
+finally:
+    if makefile_version and makefile_patchlevel:
+        version = release = makefile_version + '.' + makefile_patchlevel
+    else:
+        version = release = "unknown version"
 
 # -- Options for HTML output -------------------------------------------------
 

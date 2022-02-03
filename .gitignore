@@ -10,3 +10,5 @@ boot/*.o
 boot/*.bin
 *.o
 *.iso
+
+Documentation/build
