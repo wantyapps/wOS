@@ -1,9 +1,10 @@
 #!/bin/bash
 
-VERSION=$(grep '^VERSION[[:space:]]*=' ../../Makefile|tr -d 'VERSION= ')
-PATCHLEVEL=$(grep '^PATCHLEVEL[[:space:]]*=' ../../Makefile|tr -d 'PATCHLEVEL= ')
-SUBLEVEL=$(grep '^SUBLEVEL[[:space:]]*=' ../../Makefile|tr -d 'SUBLEVEL= ')
-EXTRAVERSION=$(grep '^EXTRAVERSION[[:space:]]*=' ../../Makefile|tr -d 'EXTRAVERSION= ')
+root=$(git rev-parse --show-toplevel)
+VERSION=$(grep '^VERSION[[:space:]]*=' ${root}/Makefile|tr -d 'VERSION= ')
+PATCHLEVEL=$(grep '^PATCHLEVEL[[:space:]]*=' ${root}/Makefile|tr -d 'PATCHLEVEL= ')
+SUBLEVEL=$(grep '^SUBLEVEL[[:space:]]*=' ${root}/Makefile|tr -d 'SUBLEVEL= ')
+EXTRAVERSION=$(grep '^EXTRAVERSION[[:space:]]*=' ${root}/Makefile|tr -d 'EXTRAVERSION= ')
 
 FULL_VERSION="$VERSION.$PATCHLEVEL.$SUBLEVEL$EXTRAVERSION"
 
