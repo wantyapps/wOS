@@ -1,4 +1,7 @@
 #!/bin/bash
+exec 1>&2 # Redirect output
+exec < /dev/tty # Enable user input
+
 
 root=$(git rev-parse --show-toplevel)
 VERSION=$(grep '^VERSION[[:space:]]*=' ${root}/Makefile|tr -d 'VERSION= ')
