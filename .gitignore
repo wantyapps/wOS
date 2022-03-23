@@ -2,6 +2,7 @@
 *.elf
 *.img
 *.bin
+.DS_Store
 
 kernel/*.o
 kernel/*.bin
@@ -12,3 +13,4 @@ boot/*.bin
 *.iso
 
 Documentation/build
+patch

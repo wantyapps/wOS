@@ -2,30 +2,53 @@ VERSION = 1
 PATCHLEVEL = 1
 SUBLEVEL = 0
 EXTRAVERSION = -rc4
+NAME = wOS
 
 C_SOURCES = $(wildcard kernel/*.c drivers/*.c cpu/*.c libc/*.c)
 HEADERS = $(wildcard kernel/*.h drivers/*.h cpu/*.h libc/*.h)
-# Nice syntax for file extension replacement
-OBJ = ${C_SOURCES:.c=.o} 
+OBJ = ${C_SOURCES:.c=.o}
 
 DOC_NAMES := latexpdf html
 
-# Change this if your cross-compiler is somewhere else
 CC = i386-elf-gcc
-GDB = gdb
-# -g: Use debugging symbols in gcc
-CFLAGS = -g
+GDB ?= i386-elf-gdb
 
-# First rule is run by default
-os-image.bin: boot/boot.o kernel.o ${OBJ}
-	# $(CC) -T linker.ld -o os-image.bin -ffreestanding -O2 -nostdlib cpu/idt.o cpu/interrupt.o cpu/isr.o cpu/ports.o cpu/timer.o boot/boot.o kernel/util.o drivers/keyboard.o drivers/screen.o kernel.o -lgcc
-	$(CC) -T linker.ld -o os-image.bin -ffreestanding -O2 -nostdlib $(OBJ) boot/boot.o -lgcc -fomit-frame-pointer
+MAKEFLAGS += -rR
+CFLAGS ?= -g -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector -nostartfiles -nodefaultlibs \
+		 -Wall -Wextra
+
+all: options os-image.bin
+
+ifeq ($(OS),Windows_NT)
+@echo "Please don't build this on Windows"
+@false
+else
+UNAME_S = $(shell uname -s)
+endif
+ifeq ($(UNAME_S),Darwin)
+OS = macOS
+else
+OS = Not Detected
+endif
+options:
+	@scripts/logo.sh
+	@echo "Building wOS Kernel version $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION) ($(NAME))"
+	@echo "OS 		: $(OS)"
+	@echo "CC		: $(CC)"
+	@echo "CFLAGS  	: $(CFLAGS)"
+	@echo "gdb		: $(GDB)"
+	@echo "C_SOURCE 	: $(C_SOURCES)"
+	@echo "HEADERS		: $(HEADERS)"
+	@echo "MAKEFLAGS	: $(MAKEFLAGS)"
+
+os-image.bin: boot/boot.o ${OBJ} cpu/interrupt.o
+	@$(CC) -T linker.ld -o os-image.bin -ffreestanding -O2 -nostdlib $^
 
 os-image-debug.bin: boot/boot.bin kernel.bin
-	cat $^ > os-image-debug.bin
+	@cat $^ > os-image-debug.bin
 
-kernel.bin: boot/kernel_entry.o ${OBJ}
-	i386-elf-ld -o $@ -Ttext 0x1000 $^ --oformat binary
+kernel.bin: boot/kernel_entry.o ${OBJ} cpu/interrupt.o
+	@i386-elf-ld -o $@ -Ttext 0x1000 $^ --oformat binary
 
 # '--oformat binary' deletes all symbols as a collateral, so we don't need
 # to 'strip' them manually on this case
@@ -36,38 +59,39 @@ kernel.bin: boot/kernel_entry.o ${OBJ}
 # 	nasm $< -f elf -o $@
 
 boot/boot.o: boot/boot.s
-	i386-elf-as boot/boot.s -o boot/boot.o
+	@i386-elf-as boot/boot.s -o boot/boot.o
 
-kernel.o: kernel/kernel.c $(OBJ)
-	$(CC) -c kernel/kernel.c -o kernel.o -std=gnu99 -ffreestanding -O2 -Wall -Wextra
+kernel.o: kernel/kernel.c $(OBJ) cpu/interrupt.o
+	@$(CC) -c cpu/interrupt.o kernel/kernel.c -o kernel.o -std=gnu99 -ffreestanding -O2 -Wall $(OBJ) -Wextra
 
 # Used for debugging purposes
-kernel.elf: boot/kernel_entry.o ${OBJ}
-	i386-elf-ld -o $@ -Ttext 0x1000 $^ 
+kernel.elf: ${OBJ}
+	@i386-elf-ld -o $@ cpu/interrupt.o -Ttext 0x1000 $^
 
 run: os-image.bin
-	qemu-system-i386 -s -kernel os-image.bin
+	@qemu-system-i386 -kernel os-image.bin
 
-# Open the connection to qemu and load our kernel-object file with symbols
 debug: os-image-debug.bin kernel.elf
-	qemu-system-i386 -s -fda os-image-debug.bin &
-	${GDB} -ex "target remote localhost:1234" -ex "symbol-file kernel.elf"
+	@qemu-system-i386 -s -fda os-image-debug.bin &
+	@${GDB} -ex "target remote localhost:1234" -ex "symbol-file kernel.elf"
 
-# Generic rules for wildcards
-# To make an object, always compile from its .c
 %.o: %.c ${HEADERS}
-	${CC} ${CFLAGS} -ffreestanding -c $< -o $@
+	@${CC} ${CFLAGS} -ffreestanding -c $< -o $@
 
 %.o: %.asm
-	nasm $< -f elf -o $@
+	@nasm $< -f elf -o $@
 
 %.bin: %.asm
-	nasm $< -f bin -o $@
+	@nasm $< -f bin -o $@
 
 $(DOC_NAMES):
-	$(MAKE) -C Documentation $@
+	@$(MAKE) -C Documentation $@
+
+iso: os-image.bin
+	@cp os-image.bin isodir/boot
+	@grub-mkrescue -o wOS.iso isodir/
 
 clean:
-	rm -rf *.bin *.dis *.o os-image.bin *.elf *.iso
-	rm -rf kernel/*.o boot/*.bin drivers/*.o boot/*.o cpu/*.o libc/*.o
-	$(MAKE) -C Documentation clean
+	@rm -rf *.bin *.dis *.o os-image.bin *.elf *.iso
+	@rm -rf kernel/*.o boot/*.bin drivers/*.o boot/*.o cpu/*.o libc/*.o
+	@$(MAKE) -C Documentation clean

@@ -9,6 +9,8 @@ follow the (simple?) rules.
 
    reporting-vulns
    sending-mails
+   contributing
+   basic_use
 
 DO NOT USE GITHUB PULL REQUESTS!
 --------------------------------

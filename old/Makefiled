@@ -1,5 +1,12 @@
+VERSION = 1
+PATCHLEVEL = 1
+SUBLEVEL = 0
+EXTRAVERSION = -rc4
+NAME = FUCK OFF
+
 C_SOURCES = $(wildcard libc/*.c kernel/*.c drivers/*.c cpu/*.c)
 HEADERS = $(wildcard libc/*.h kernel/*.h drivers/*.h cpu/*.h)
+
 # Nice syntax for file extension replacement
 OBJ = ${C_SOURCES:.c=.o}
 
@@ -9,38 +16,63 @@ GDB = gdb
 # -g: Use debugging symbols in gcc
 CFLAGS = -g
 
+DOC_NAMES := latexpdf html
+
+MAKEFLAGS += -rR
+
+all: options os-image.bin
+
+options:
+	@echo "Building wOS Kernel version $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION) ($(NAME))"
+	@echo "CC		: $(CC)"
+	@echo "CFLAGS  	: $(CFLAGS)"
+	@echo "gdb		: $(GDB)"
+	@echo "C_SOURCE 	: $(C_SOURCES)"
+	@echo "HEADERS		: $(HEADERS)"
+	@echo "MAKEFLAGS	: $(MAKEFLAGS)"
+
 # First rule is run by default
 os-image.bin: boot/boot.bin kernel.bin
 	cat $^ > os-image.bin
 
 # '--oformat binary' deletes all symbols as a collateral, so we don't need
 # to 'strip' them manually on this case
-kernel.bin: boot/kernel_entry.o ${OBJ}
-	i386-elf-ld -o $@ -Ttext 0x1000 $^ --oformat binary
+kernel.bin: boot/kernel_entry.o ${OBJ} cpu/interrupt.o
+	@i386-elf-ld -o $@ -Ttext 0x1000 $^ --oformat binary
 
 # Used for debugging purposes
-kernel.elf: boot/kernel_entry.o ${OBJ}
-	i386-elf-ld -o $@ -Ttext 0x1000 $^ 
+kernel.elf: boot/kernel_entry.o ${OBJ} cpu/interrupt.o
+	@i386-elf-ld -o $@ -Ttext 0x1000 $^ 
+
+test/test: test/test.c
+	gcc -o test/test test/test.c
+
+test: test/test
+	./test/test
 
 run: os-image.bin
-	qemu-system-i386 -fda os-image.bin
+	@qemu-system-i386 -s -fda os-image.bin
 
 # Open the connection to qemu and load our kernel-object file with symbols
 debug: os-image.bin kernel.elf
-	qemu-system-i386 -s -fda os-image.bin &
-	${GDB} -ex "target remote localhost:1234" -ex "symbol-file kernel.elf"
+	@qemu-system-i386 -s -fda os-image.bin &
+	@${GDB} -ex "target remote localhost:1234" -ex "symbol-file kernel.elf"
 
 # Generic rules for wildcards
 # To make an object, always compile from its .c
 %.o: %.c ${HEADERS}
-	${CC} ${CFLAGS} -ffreestanding -c $< -o $@
+	@${CC} ${CFLAGS} -ffreestanding -c $< -o $@
 
 %.o: %.asm
-	nasm $< -f elf -o $@
+	@nasm $< -f elf -o $@
 
 %.bin: %.asm
-	nasm $< -f bin -o $@
+	@nasm $< -f bin -o $@
+
+$(DOC_NAMES):
+	@$(MAKE) -C Documentation $@
 
 clean:
-	rm -rf *.bin *.dis *.o os-image.bin *.elf
-	rm -rf kernel/*.o boot/*.bin drivers/*.o boot/*.o
+	@rm -rf *.bin *.dis *.o os-image.bin *.elf
+	@rm -rf kernel/*.o boot/*.bin drivers/*.o boot/*.o
+	@$(MAKE) -C Documentation clean

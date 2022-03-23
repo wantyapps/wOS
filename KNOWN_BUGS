@@ -1,0 +1,4 @@
+Known Bugs
+==========
+
+- `make run` corrently does nothing. Use `make debug`.
