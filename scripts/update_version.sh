@@ -4,10 +4,10 @@ exec < /dev/tty # Enable user input
 
 
 root=$(git rev-parse --show-toplevel)
-VERSION=$(grep '^VERSION[[:space:]]*=' ${root}/Makefile|tr -d ' ')
-PATCHLEVEL=$(grep '^PATCHLEVEL[[:space:]]*=' ${root}/Makefile|tr -d ' ')
-SUBLEVEL=$(grep '^SUBLEVEL[[:space:]]*=' ${root}/Makefile|tr -d ' ')
-EXTRAVERSION=$(grep '^EXTRAVERSION[[:space:]]*=' ${root}/Makefile|tr -d ' ')
+VERSION=$(grep '^VERSION[[:space:]]*=' ${root}/Makefile|tr -d 'VERSION= ')
+PATCHLEVEL=$(grep '^PATCHLEVEL[[:space:]]*=' ${root}/Makefile|tr -d 'PATCHLEVEL= ')
+SUBLEVEL=$(grep '^SUBLEVEL[[:space:]]*=' ${root}/Makefile|tr -d 'SUBLEVEL= ')
+EXTRAVERSION=$(grep '^EXTRAVERSION[[:space:]]*=' ${root}/Makefile|tr -d 'EXTRAVERSION= ')
 NAME=$(grep '^NAME[[:space:]]*=' ${root}/Makefile|tr -d 'NAME= ')
 
 KERNELVERSION=$(grep '^int VERSION' ${root}/kernel/kernelversion.h|tr -d ' ')
