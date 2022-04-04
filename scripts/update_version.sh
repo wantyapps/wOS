@@ -35,8 +35,8 @@ if [ "$versionyn" != "y" ]; then
 	exit 1
 fi
 read -ep "Autotag? [y/n]:" autotag
-read -ep "Message: " message
 
 if [ "$autotag" == "y" ]; then 
+	read -ep "Message: " message
 	git tag -as "v$FULL_VERSION" -m "$message"
 fi

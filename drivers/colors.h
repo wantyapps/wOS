@@ -1,2 +1,5 @@
 #define RED_ON_BLACK 0x04
+#define YELLOW_ON_BLACK 0x06
+#define GRAY_ON_BLACK 0x08
+#define GREEN_ON_BLACK 0x02
 #define BLACK_ON_WHITE 0xf0

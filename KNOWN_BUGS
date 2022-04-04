@@ -1,4 +1,4 @@
 Known Bugs
 ==========
 
-- `make run` corrently does nothing. Use `make debug`.
+- `make run` currently does nothing. Use `make debug`.
