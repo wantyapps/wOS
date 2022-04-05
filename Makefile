@@ -66,8 +66,8 @@ boot/boot.o: boot/boot.s
 	@i386-elf-as boot/boot.s -o boot/boot.o
 
 kernel.o: kernel/kernel.c $(OBJ) cpu/interrupt.o
-	@
-	@$(CC_CMD)$(CC) -c cpu/interrupt.o kernel/kernel.c -o kernel.o -std=gnu99 -ffreestanding -O2 -Wall $(OBJ) -Wextra
+	@$(CC_CMD)
+	@$(CC) -c cpu/interrupt.o kernel/kernel.c -o kernel.o -std=gnu99 -ffreestanding -O2 -Wall $(OBJ) -Wextra
 
 # Used for debugging purposes
 kernel.elf: ${OBJ}
