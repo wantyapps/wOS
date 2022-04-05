@@ -4,6 +4,9 @@ SUBLEVEL = 0
 EXTRAVERSION = -rc6
 NAME = wOS
 
+CC_CMD = @echo "CC $@"
+MAKE_CMD = @echo "MAKE $@"
+
 C_SOURCES = $(wildcard kernel/*.c drivers/*.c cpu/*.c libc/*.c)
 HEADERS = $(wildcard kernel/*.h drivers/*.h cpu/*.h libc/*.h)
 OBJ = ${C_SOURCES:.c=.o}
@@ -20,7 +23,7 @@ CFLAGS ?= -g -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector -nostart
 all: options os-image.bin
 
 ifeq ($(OS),Windows_NT)
-@echo "Please don't build this on Windows"
+@echo "Don't build this on Windows."
 @false
 else
 UNAME_S = $(shell uname -s)
@@ -42,6 +45,7 @@ options:
 	@echo "MAKEFLAGS	: $(MAKEFLAGS)"
 
 os-image.bin: boot/boot.o ${OBJ} cpu/interrupt.o
+	@$(CC_CMD)
 	@$(CC) -T linker.ld -o os-image.bin -ffreestanding -O2 -nostdlib $^
 
 os-image-debug.bin: boot/boot.bin kernel.bin
@@ -62,7 +66,8 @@ boot/boot.o: boot/boot.s
 	@i386-elf-as boot/boot.s -o boot/boot.o
 
 kernel.o: kernel/kernel.c $(OBJ) cpu/interrupt.o
-	@$(CC) -c cpu/interrupt.o kernel/kernel.c -o kernel.o -std=gnu99 -ffreestanding -O2 -Wall $(OBJ) -Wextra
+	@
+	@$(CC_CMD)$(CC) -c cpu/interrupt.o kernel/kernel.c -o kernel.o -std=gnu99 -ffreestanding -O2 -Wall $(OBJ) -Wextra
 
 # Used for debugging purposes
 kernel.elf: ${OBJ}
@@ -73,10 +78,11 @@ run: os-image.bin
 
 debug: os-image-debug.bin kernel.elf
 	@qemu-system-i386 -s -fda os-image-debug.bin &
-	@${GDB} -ex "target remote localhost:1234" -ex "symbol-file kernel.elf"
+	@$(GDB) -ex "target remote localhost:1234" -ex "symbol-file kernel.elf"
 
 %.o: %.c ${HEADERS}
-	@${CC} ${CFLAGS} -ffreestanding -c $< -o $@
+	@$(CC_CMD)
+	@$(CC) $(CFLAGS) -ffreestanding -c $< -o $@
 
 %.o: %.asm
 	@nasm $< -f elf -o $@
@@ -85,6 +91,7 @@ debug: os-image-debug.bin kernel.elf
 	@nasm $< -f bin -o $@
 
 $(DOC_NAMES):
+	@$(MAKE_CMD)
 	@$(MAKE) -C Documentation $@
 
 iso: os-image.bin
@@ -94,4 +101,5 @@ iso: os-image.bin
 clean:
 	@rm -rf *.bin *.dis *.o os-image.bin *.elf *.iso
 	@rm -rf kernel/*.o boot/*.bin drivers/*.o boot/*.o cpu/*.o libc/*.o
+	@$(MAKE_CMD)
 	@$(MAKE) -C Documentation clean
