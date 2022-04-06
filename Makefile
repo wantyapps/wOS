@@ -34,7 +34,7 @@ else
 OS = Not Detected
 endif
 
-all: options cpu drivers libc os-image.bin
+all: options $(SUBDIRS) os-image.bin
 
 options:
 	@scripts/logo.sh
