@@ -7,6 +7,7 @@
 #include "../kernel/kernel.h"
 
 #define BACKSPACE 0x0E
+#define LCTRL 0x1D
 #define ENTER 0x1C
 
 static char key_buffer[256];
@@ -27,18 +28,19 @@ const char sc_ascii[] = { '?', '?', '1', '2', '3', '4', '5', '6',
 static void keyboard_callback(registers_t regs) {
     /* The PIC leaves us the scancode in port 0x60 */
     u8 scancode = port_byte_in(0x60);
-    
     if (scancode > SC_MAX) return;
     if (scancode == BACKSPACE) {
         backspace(key_buffer);
         kprint_backspace();
     } else if (scancode == ENTER) {
-        kprint("\n", RED_ON_WHITE);
-        user_input(key_buffer, "wOS>"); /* kernel-controlled function */
+        kprint("\n", WHITE_ON_BLACK);
+        user_input(key_buffer, "wOS>");
         key_buffer[0] = '\0';
+    } else if (scancode == LCTRL) {
+	kernelLogPrint("Halting CPU\n", "info");
+	asm volatile("hlt");
     } else {
         char letter = sc_ascii[(int)scancode];
-        /* Remember that kprint only accepts char[] */
         char str[2] = {letter, '\0'};
         append(key_buffer, letter);
         kprint(str, WHITE_ON_BLACK);
