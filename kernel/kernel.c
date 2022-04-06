@@ -114,7 +114,7 @@ void user_input(char *input, char *prompt) {
 			usage();
 		} else if (strcmp(input, "VERSION") == 0) {
 			kernelLogPrint("This is wOS Version ", "info");
-			kprint(FULLVERSION, WHITE_ON_BLACK);
+			kprint(FULLVERSION, GRAY_ON_BLACK);
 		} else if (strcmp(input, "TESTCOLORS") == 0 || strcmp(input, "COLORTEST") == 0) {
 			kernelLogPrint("Info test\n", "info");
 			kernelLogPrint("Warn test\n", "warn");
