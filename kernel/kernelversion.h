@@ -4,6 +4,6 @@
 #define PATCHLEVEL 1
 #define SUBLEVEL 0
 #define EXTRAVERSION ""
-#define NAME "wOS"
-#define FULLVERSION "1.1.0 (wOS)"
+#define NAME "honk"
+#define FULLVERSION "1.2.0 (honk)"
 #endif
