@@ -1,4 +1,9 @@
 Known Bugs
 ==========
 
-- `make run` currently does nothing. Use `make debug`.
+* `make run` currently does nothing. Use `make debug`.
+  This is because of interrupts not working (?).
+  We are trying to fix this, but it will take some time (maybe in 1.2.0)
+
+  Resort to using `make debug` and `c` to continue in gdb to launch it
+  with a different bootloader.
