@@ -50,7 +50,7 @@ void credits(char *caller) {
 	}
 }
 
-static void foff() {
+static void __foff() {
 	kprint("FUCK OFF\n", RED_ON_BLACK);
 	kprint("-Yuval", GREEN_ON_BLACK);
 }
@@ -71,7 +71,7 @@ void kernelLogPrint(char *string, char *level) {
 	}
 }
 
-static void commandNotFound(char *input) {
+static void __commandNotFound(char *input) {
 	kprint("*** ", RED_ON_BLACK);
 	kprint("wOS: ", WHITE_ON_BLACK);
 	kprint(input, WHITE_ON_BLACK);
@@ -85,7 +85,7 @@ int word_center_screen_center(char *string) {
 	return MAX_COLS / 2 - strlen(string) / 2;
 }
 
-static void usage() {
+static void __usage() {
 	kprint("Usage:\n", WHITE_ON_BLACK);
 	kprint("COMMAND                HELP\n", WHITE_ON_BLACK);
 	kprint("END/EXIT               Halt CPU\n", WHITE_ON_BLACK);
@@ -119,9 +119,9 @@ void user_input(char *input, char *prompt) {
 		} else if (strcmp(input, "CLEAR") == 0) {
 			clear_screen();
 		} else if (strcmp(input, "YUVAL") == 0) {
-			foff(); // Don't ask.
+			__foff(); // Don't ask.
 		} else if (strcmp(input, "HELP") == 0 || strcmp(input, "USAGE") == 0) {
-			usage();
+			__usage();
 		} else if (strcmp(input, "VERSION") == 0) {
 			kernelLogPrint("This is wOS Version ", "info");
 			kprint(FULLVERSION, GRAY_ON_BLACK);
@@ -140,7 +140,7 @@ void user_input(char *input, char *prompt) {
 			char testLog[][1000] = {"test1", "test2"};
 			printLogBuffer(testLog);
 		} else {
-			commandNotFound(input);
+			__commandNotFound(input);
 		}
 		kprint("\nwOS>", WHITE_ON_BLACK);
 	}
