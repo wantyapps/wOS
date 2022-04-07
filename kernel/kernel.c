@@ -40,7 +40,17 @@ void printLogBuffer(char *log) {
 	/* kprint(&log[2], WHITE_ON_BLACK); */
 }
 
-void fuckoff() {
+void credits(char *caller) {
+	if ( strcmp(caller, "keyboard") == 0 ) {
+		kprint("\nCREDITS\n\n", WHITE_ON_BLACK);
+		kprint("Uri Arev - Maintainer\n", WHITE_ON_BLACK);
+		kprint("Yuval Maya - Maintainer\n", WHITE_ON_BLACK);
+		kprint("Eytam P. - Contributor/Release names\n", WHITE_ON_BLACK);
+		kprint("wOS>", WHITE_ON_BLACK);
+	}
+}
+
+static void foff() {
 	kprint("FUCK OFF\n", RED_ON_BLACK);
 	kprint("-Yuval", GREEN_ON_BLACK);
 }
@@ -61,7 +71,7 @@ void kernelLogPrint(char *string, char *level) {
 	}
 }
 
-void commandNotFound(char *input) {
+static void commandNotFound(char *input) {
 	kprint("*** ", RED_ON_BLACK);
 	kprint("wOS: ", WHITE_ON_BLACK);
 	kprint(input, WHITE_ON_BLACK);
@@ -75,7 +85,7 @@ int word_center_screen_center(char *string) {
 	return MAX_COLS / 2 - strlen(string) / 2;
 }
 
-void usage() {
+static void usage() {
 	kprint("Usage:\n", WHITE_ON_BLACK);
 	kprint("COMMAND                HELP\n", WHITE_ON_BLACK);
 	kprint("END/EXIT               Halt CPU\n", WHITE_ON_BLACK);
@@ -109,7 +119,7 @@ void user_input(char *input, char *prompt) {
 		} else if (strcmp(input, "CLEAR") == 0) {
 			clear_screen();
 		} else if (strcmp(input, "YUVAL") == 0) {
-			fuckoff(); // Don't ask.
+			foff(); // Don't ask.
 		} else if (strcmp(input, "HELP") == 0 || strcmp(input, "USAGE") == 0) {
 			usage();
 		} else if (strcmp(input, "VERSION") == 0) {

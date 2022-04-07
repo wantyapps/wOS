@@ -8,6 +8,7 @@
 
 #define BACKSPACE 0x0E
 #define LCTRL 0x1D
+#define LALT 0x38
 #define ENTER 0x1C
 
 static char key_buffer[256];
@@ -26,26 +27,29 @@ const char sc_ascii[] = { '?', '?', '1', '2', '3', '4', '5', '6',
         'B', 'N', 'M', ',', '.', '/', '?', '?', '?', ' '};
 
 static void keyboard_callback(registers_t regs) {
-    /* The PIC leaves us the scancode in port 0x60 */
-    u8 scancode = port_byte_in(0x60);
-    if (scancode > SC_MAX) return;
-    if (scancode == BACKSPACE) {
-        backspace(key_buffer);
-        kprint_backspace();
-    } else if (scancode == ENTER) {
-        kprint("\n", WHITE_ON_BLACK);
-        user_input(key_buffer, "wOS>");
-        key_buffer[0] = '\0';
-    } else if (scancode == LCTRL) {
-	kernelLogPrint("Halting CPU\n", "info");
-	asm volatile("hlt");
-    } else {
-        char letter = sc_ascii[(int)scancode];
-        char str[2] = {letter, '\0'};
-        append(key_buffer, letter);
-        kprint(str, WHITE_ON_BLACK);
-    }
-    UNUSED(regs);
+	/* The PIC leaves us the scancode in port 0x60 */
+	u8 scancode = port_byte_in(0x60);
+	if (scancode > SC_MAX) return;
+	if (scancode == BACKSPACE) {
+		backspace(key_buffer);
+		kprint_backspace();
+	} else if (scancode == ENTER) {
+		kprint("\n", WHITE_ON_BLACK);
+		user_input(key_buffer, "wOS>");
+		key_buffer[0] = '\0';
+	} else if (scancode == LCTRL) { // Not the best idea
+		kprint("\n", WHITE_ON_BLACK);
+		kernelLogPrint("Halting CPU\n", "info");
+		asm volatile("hlt");
+	} else if (scancode == LALT) {
+		credits("keyboard");
+	} else {
+		char letter = sc_ascii[(int)scancode];
+		char str[2] = {letter, '\0'};
+		append(key_buffer, letter);
+		kprint(str, WHITE_ON_BLACK);
+	}
+	UNUSED(regs);
 }
 
 void init_keyboard() {

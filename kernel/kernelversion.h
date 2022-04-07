@@ -5,5 +5,5 @@
 #define SUBLEVEL 0
 #define EXTRAVERSION ""
 #define NAME "honk"
-#define FULLVERSION "1.2.0 (honk)"
+#define FULLVERSION "1.2.1 (honk)"
 #endif
