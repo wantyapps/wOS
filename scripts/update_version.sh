@@ -34,9 +34,9 @@ read -ep "Are you sure kernel/kernelversion.h and Makefile versions match? [y/n]
 if [ "$versionyn" != "y" ]; then
 	exit 1
 fi
-read -ep "Autotag? [y/n]:" autotag
 
+read -ep "Autotag? [y/n]:" autotag
 if [ "$autotag" == "y" ]; then 
-	read -ep "Message: " message
-	git tag -as "v$FULL_VERSION" -m "$message"
+	read -p "Press ENTER to proceed to editor"
+	git tag -as "v$FULL_VERSION"
 fi
