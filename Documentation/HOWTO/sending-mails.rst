@@ -5,6 +5,9 @@ As you have probably read, we accept contributions via mail.
 Your subject should look like the following:
 ``Subject: Contribution to wOS: <feature name/summary>``
 
+OR: The subject could be the default (numbered) subject
+created by ``git-send-mail``
+
 The body must have an explanation of what the feature is and
 the files changed (or just a diff)
 
@@ -24,15 +27,30 @@ These arguments do the following:
 
 Then use the following command to create a local patch directory
 and create a patch:
-``git format-patch -o patches/ HEAD^``
+``git format-patch -o patch/ <commit>``
 
-You can now send the patch to a contributor.
+To create patchsets use the following commands:
+``git format-patch -n --cover-letter <commit1>..<commit2>``
 
-Sending Patches
----------------
+Now, you need to replace ``***SUBJECT HERE***`` with the subject
+and ``***BLURB HERE***`` with a description.
+
+You can now send the patch/patchset to a contributor.
+
+Sending Patches with Mutt
+-------------------------
 To send a patch (assuming you have one ready) use the
 following commands:
 (assuming you have mutt configured)
 ``mutt -H path/to/patch/patch.patch``
 
 ``-H``: Use the file as a draft.
+
+Sending Patches with Git-send-mail
+----------------------------------
+You can also send patches with ``scripts/send_all_patches.sh``.
+
+Usage:
+``./scripts/send_all_patches.sh``
+
+This will send all patches to Uri Arev (me@wantyapps.xyz).

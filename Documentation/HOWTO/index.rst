@@ -7,6 +7,7 @@ follow the (simple?) rules.
 .. toctree::
    :maxdepth: 1
 
+   building
    reporting-vulns
    sending-mails
    contributing

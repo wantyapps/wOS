@@ -11,7 +11,7 @@ C_SOURCES = $(wildcard kernel/*.c)
 HEADERS = $(wildcard kernel/*.h)
 # OBJ = $(C_SOURCES:.c=.o cpu/*.o)
 OBJ = $(C_SOURCES:.c=.o cpu/ports.o cpu/isr.o cpu/idt.o cpu/timer.o cpu/interrupt.o drivers/screen.o drivers/keyboard.o libc/mem.o libc/string.o)
-SUBDIRS := cpu drivers libc
+SUBDIRS := cpu drivers libc kernel
 
 DOC_NAMES := latexpdf html
 
@@ -68,9 +68,9 @@ kernel.bin: boot/kernel_entry.o $(OBJ) cpu/interrupt.o
 boot/boot.o: boot/boot.s
 	@i386-elf-as boot/boot.s -o boot/boot.o
 
-kernel.o: kernel/kernel.c $(OBJ) cpu/interrupt.o
-	@$(CC_CMD)
-	@$(CC) -c cpu/interrupt.o kernel/kernel.c -o kernel.o -std=gnu99 -ffreestanding -O2 -Wall $(OBJ) -Wextra
+# kernel.o: kernel/kernel.c $(OBJ) cpu/interrupt.o
+# 	@$(CC_CMD)
+# 	@$(CC) -c cpu/interrupt.o kernel/kernel.c -o kernel.o -std=gnu99 -ffreestanding -O2 -Wall $(OBJ) -Wextra
 
 # Used for debugging purposes
 kernel.elf: ${OBJ}
@@ -93,19 +93,6 @@ debug: os-image-debug.bin kernel.elf
 %.bin: %.asm
 	@nasm $< -f bin -o $@
 
-# cpu:
-# 	@$(MAKE_CMD)
-# 	@$(MAKE) -C cpu
-
-# drivers:
-# 	@$(MAKE_CMD)
-# 	@$(MAKE) -C drivers
-
-# libc:
-# 	@echo got to libc
-# 	@$(MAKE_CMD)
-# 	@$(MAKE) -C libc
-
 $(DOC_NAMES):
 	@$(MAKE) -C Documentation $@
 
@@ -118,11 +105,12 @@ $(SUBDIRS):
 
 clean:
 	@rm -rf *.bin *.dis *.o os-image.bin *.elf *.iso
-	@rm -rf kernel/*.o boot/*.bin boot/*.o
+	@rm -rf boot/*.bin boot/*.o
 	@$(MAKE) -C Documentation clean
 	@$(MAKE) -C cpu clean
 	@$(MAKE) -C drivers clean
 	@$(MAKE) -C libc clean
+	@$(MAKE) -C kernel clean
 
 
 .PHONY: cpu drivers $(SUBDIRS)
