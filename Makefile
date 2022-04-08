@@ -34,7 +34,44 @@ else
 OS = Not Detected
 endif
 
+# Straight up copied from linux/Makefile
+ifeq ("$(origin V)", "command line")
+	VERBOSE = $(V)
+endif
+ifndef VERBOSE
+	VERBOSE = 0
+endif
+
+ifeq ($(VERBOSE),1)
+	quiet =
+	Q =
+else
+	quiet=quiet_
+	Q = @
+endif
+
+ifneq ($(findstring s,$(filter-out --%,$(MAKEFLAGS))),)
+	quiet=silent_
+	VERBOSE = 0
+endif
+
+export quiet Q VERBOSE
+
 all: options $(SUBDIRS) os-image.bin
+
+help:
+	@echo "Cleaning targets:"
+	@echo "  clean           - Remove most generated files"
+	@echo "  patchclean      - Remove all patches left"
+	@echo ""
+	@echo "Modules:"
+	@echo "You should generally not compile modules individually."
+	@echo "  drivers         - Compile all files in drivers/"
+	@echo "  cpu             - Compile all files in cpu/"
+	@echo "  libc            - Compile all files in libc/"
+	@echo "  kernel          - Compile kernel"
+	@echo "Options:"
+	@echo "  make V=(0/1)    - Verbosity level (default 0, don't show commands)"
 
 options:
 	@scripts/logo.sh
@@ -49,13 +86,13 @@ options:
 
 os-image.bin: boot/boot.o $(OBJ)
 	@$(CC_CMD)
-	@$(CC) -T linker.ld -o os-image.bin -ffreestanding -O2 -nostdlib $^
+	$(Q)$(CC) -T linker.ld -o os-image.bin -ffreestanding -O2 -nostdlib $^
 
 os-image-debug.bin: boot/boot.bin kernel.bin $(OBJ)
-	@cat $^ > os-image-debug.bin
+	$(Q)cat $^ > os-image-debug.bin
 
 kernel.bin: boot/kernel_entry.o $(OBJ) cpu/interrupt.o
-	@i386-elf-ld -o $@ -Ttext 0x1000 $^ --oformat binary
+	$(Q)i386-elf-ld -o $@ -Ttext 0x1000 $^ --oformat binary
 
 # '--oformat binary' deletes all symbols as a collateral, so we don't need
 # to 'strip' them manually on this case
@@ -66,7 +103,7 @@ kernel.bin: boot/kernel_entry.o $(OBJ) cpu/interrupt.o
 # 	nasm $< -f elf -o $@
 
 boot/boot.o: boot/boot.s
-	@i386-elf-as boot/boot.s -o boot/boot.o
+	$(Q)i386-elf-as boot/boot.s -o boot/boot.o
 
 # kernel.o: kernel/kernel.c $(OBJ) cpu/interrupt.o
 # 	@$(CC_CMD)
@@ -74,43 +111,46 @@ boot/boot.o: boot/boot.s
 
 # Used for debugging purposes
 kernel.elf: ${OBJ}
-	@i386-elf-ld -o $@ -Ttext 0x1000 $^
+	$(Q)i386-elf-ld -o $@ -Ttext 0x1000 $^
 
 run: os-image.bin
-	@qemu-system-i386 -kernel os-image.bin
+	$(Q)qemu-system-i386 -kernel os-image.bin
 
 debug: os-image-debug.bin kernel.elf
-	@qemu-system-i386 -s -fda os-image-debug.bin &
-	@$(GDB) -ex "target remote localhost:1234" -ex "symbol-file kernel.elf"
+	$(Q)qemu-system-i386 -s -fda os-image-debug.bin &
+	$(Q)$(GDB) -ex "target remote localhost:1234" -ex "symbol-file kernel.elf"
 
 %.o: %.c $(HEADERS)
 	@$(CC_CMD)
-	@$(CC) $(CFLAGS) -ffreestanding -c $< -o $@
+	$(Q)$(CC) $(CFLAGS) -ffreestanding -c $< -o $@
 
 %.o: %.asm
-	@nasm $< -f elf -o $@
+	$(Q)nasm $< -f elf -o $@
 
 %.bin: %.asm
-	@nasm $< -f bin -o $@
+	$(Q)nasm $< -f bin -o $@
 
 $(DOC_NAMES):
-	@$(MAKE) -C Documentation $@
+	$(Q)$(MAKE) -C Documentation $@
 
 iso: os-image.bin
-	@cp os-image.bin isodir/boot
-	@grub-mkrescue -o wOS.iso isodir/
+	$(Q)cp os-image.bin isodir/boot
+	$(Q)grub-mkrescue -o wOS.iso isodir/
 
 $(SUBDIRS):
-	@$(MAKE) -C $@
+	$(Q)$(MAKE) -C $@
 
 clean:
-	@rm -rf *.bin *.dis *.o *.elf *.iso
-	@rm -rf boot/*.bin boot/*.o
-	@$(MAKE) -C Documentation clean
-	@$(MAKE) -C cpu clean
-	@$(MAKE) -C drivers clean
-	@$(MAKE) -C libc clean
-	@$(MAKE) -C kernel clean
+	$(Q)rm -rf *.bin *.dis *.o *.elf *.iso
+	$(Q)rm -rf boot/*.bin boot/*.o
+	$(Q)$(MAKE) -C Documentation clean
+	$(Q)$(MAKE) -C cpu clean
+	$(Q)$(MAKE) -C drivers clean
+	$(Q)$(MAKE) -C libc clean
+	$(Q)$(MAKE) -C kernel clean
+
+patchclean:
+	$(Q)rm -rf patch/*.patch
 
 
 .PHONY: cpu drivers $(SUBDIRS)

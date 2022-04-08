@@ -5,14 +5,14 @@
 
 u32 tick = 0;
 
-static void timer_callback(registers_t regs) {
+static void __timer_callback(registers_t regs) {
     tick++;
     UNUSED(regs);
 }
 
 void init_timer(u32 freq) {
     /* Install the function we just wrote */
-    register_interrupt_handler(IRQ0, timer_callback);
+    register_interrupt_handler(IRQ0, __timer_callback);
 
     /* Get the PIT value: hardware clock at 1193180 Hz */
     u32 divisor = 1193180 / freq;
