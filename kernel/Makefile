@@ -11,4 +11,4 @@ kernel.o: kernel.c kernel.h
 	$(Q)$(CC) -c kernel.c -o kernel.o -std=gnu99 -ffreestanding -O2 -Wall -Wextra
 
 clean:
-	$(Q)rm *.o
+	$(Q)rm -f *.o

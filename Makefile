@@ -18,7 +18,7 @@ DOC_NAMES := latexpdf html
 CC = i386-elf-gcc
 GDB ?= i386-elf-gdb
 
-MAKEFLAGS += -rR --no-print-directory
+MAKEFLAGS += -rR
 CFLAGS ?= -g -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector -nostartfiles -nodefaultlibs \
 		 -Wall -Wextra
 
@@ -48,6 +48,7 @@ ifeq ($(VERBOSE),1)
 else
 	quiet=quiet_
 	Q = @
+	MAKEFLAGS += --no-print-directory
 endif
 
 ifneq ($(findstring s,$(filter-out --%,$(MAKEFLAGS))),)

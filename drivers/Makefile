@@ -15,4 +15,4 @@ keyboard.o: keyboard.c keyboard.h
 	$(Q)$(CC) $(CFLAGS) -ffreestanding -c keyboard.c -o keyboard.o
 
 clean:
-	$(Q)rm *.o
+	$(Q)rm -f *.o

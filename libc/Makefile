@@ -16,4 +16,4 @@ string.o: string.c string.h
 	$(Q)$(CC) $(CFLAGS) -ffreestanding -c string.c -o string.o
 
 clean:
-	$(Q)rm *.o
+	$(Q)rm -f *.o

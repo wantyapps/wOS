@@ -23,4 +23,4 @@ timer.o: timer.c timer.h
 	$(Q)$(CC) $(CFLAGS) -ffreestanding -c timer.c -o timer.o
 
 clean:
-	$(Q)rm *.o
+	$(Q)rm -f *.o
