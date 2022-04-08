@@ -104,7 +104,7 @@ $(SUBDIRS):
 	@$(MAKE) -C $@
 
 clean:
-	@rm -rf *.bin *.dis *.o os-image.bin *.elf *.iso
+	@rm -rf *.bin *.dis *.o *.elf *.iso
 	@rm -rf boot/*.bin boot/*.o
 	@$(MAKE) -C Documentation clean
 	@$(MAKE) -C cpu clean

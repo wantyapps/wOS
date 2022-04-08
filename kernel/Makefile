@@ -15,4 +15,4 @@ kernel.o: kernel.c kernel.h
 	@$(CC) -c kernel.c -o kernel.o -std=gnu99 -ffreestanding -O2 -Wall -Wextra
 
 clean:
-	@rm kernel.o
+	@rm *.o
