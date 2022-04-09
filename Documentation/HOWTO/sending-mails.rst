@@ -51,6 +51,6 @@ Sending Patches with Git-send-mail
 You can also send patches with ``scripts/send_all_patches.sh``.
 
 Usage:
-``./scripts/send_all_patches.sh``
+``./make_scripts/send_all_patches.sh``
 
 This will send all patches to Uri Arev (me@wantyapps.xyz).

@@ -1,8 +1,11 @@
 VERSION = 1
 PATCHLEVEL = 2
-SUBLEVEL = 2
+SUBLEVEL = 3
 EXTRAVERSION =
 NAME = honk
+
+$(if $(filter __%, $(MAKECMDGOALS)), \
+	$(error targets prefixed with '__' are only for internal use))
 
 CC_CMD = @echo "CC $@"
 MAKE_CMD = @echo "MAKE $@"
@@ -23,8 +26,7 @@ CFLAGS ?= -g -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector -nostart
 		 -Wall -Wextra
 
 ifeq ($(OS), Windows_NT)
-@echo "Don't build this on Windows."
-@false
+$(error Don't build this on Windows.)
 else
 UNAME_S = $(shell uname -s)
 endif
@@ -58,7 +60,7 @@ endif
 
 export quiet Q VERBOSE
 
-all: options $(SUBDIRS) os-image.bin
+__all: options $(SUBDIRS) os-image.bin
 
 help:
 	@echo "Cleaning targets:"
@@ -73,9 +75,11 @@ help:
 	@echo "  kernel          - Compile kernel"
 	@echo "Options:"
 	@echo "  make V=(0/1)    - Verbosity level (default 0, don't show commands)"
+	@echo "Documentation targets:"
+	@echo "  html            - Build the html docs (Documentation/build/html/index.html)"
 
 options:
-	@scripts/logo.sh
+	$(Q)scripts/logo.sh
 	@echo "Building wOS Kernel version $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION) ($(NAME))"
 	@echo "OS 		: $(OS)"
 	@echo "CC		: $(CC)"

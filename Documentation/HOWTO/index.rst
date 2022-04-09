@@ -8,10 +8,10 @@ follow the (simple?) rules.
    :maxdepth: 1
 
    building
-   reporting-vulns
+   basic-use
    sending-mails
+   reporting-vulns
    contributing
-   basic_use
 
 DO NOT USE GITHUB PULL REQUESTS!
 --------------------------------
