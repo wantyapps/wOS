@@ -1,8 +1,8 @@
 VERSION = 1
-PATCHLEVEL = 2
-SUBLEVEL = 3
+PATCHLEVEL = 3
+SUBLEVEL = 0
 EXTRAVERSION =
-NAME = honk
+NAME = vinyl
 
 $(if $(filter __%, $(MAKECMDGOALS)), \
 	$(error targets prefixed with '__' are only for internal use))
@@ -79,8 +79,7 @@ help:
 	@echo "  html            - Build the html docs (Documentation/build/html/index.html)"
 
 options:
-	$(Q)scripts/logo.sh
-	@echo "Building wOS Kernel version $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION) ($(NAME))"
+	$(Q)scripts/logo.sh @echo "Building wOS Kernel version $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION) ($(NAME))"
 	@echo "OS 		: $(OS)"
 	@echo "CC		: $(CC)"
 	@echo "CFLAGS  	: $(CFLAGS)"
