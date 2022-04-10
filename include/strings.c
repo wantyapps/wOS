@@ -2,7 +2,7 @@
 
 /* str_len(string)
 Count characters (except '\0') in a string
-and return the humber
+and return the number
 */
 
 int str_len(char* string) {

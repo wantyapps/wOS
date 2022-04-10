@@ -1,6 +1,6 @@
 VERSION = 1
 PATCHLEVEL = 3
-SUBLEVEL = 0
+SUBLEVEL = 1
 EXTRAVERSION =
 NAME = vinyl
 
@@ -77,6 +77,9 @@ help:
 	@echo "  make V=(0/1)    - Verbosity level (default 0, don't show commands)"
 	@echo "Documentation targets:"
 	@echo "  html            - Build the html docs (Documentation/build/html/index.html)"
+	@echo "Patch targets:"
+	@echo "  patchclean      - Remove all patches left"
+	@echo "  createpatches 1=<commit1> 2=<commit2> - Create patches from commits"
 
 options:
 	$(Q)scripts/logo.sh @echo "Building wOS Kernel version $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION) ($(NAME))"
@@ -153,8 +156,11 @@ clean:
 	$(Q)$(MAKE) -C libc clean
 	$(Q)$(MAKE) -C kernel clean
 
+createpatches: patchclean
+	$(Q)git format-patch -o patch/ -n --cover-letter $(1)..$(2)
+
 patchclean:
-	$(Q)rm -rf patch/*.patch
+	$(Q)rm -rf patch/*
 
 
 .PHONY: cpu drivers $(SUBDIRS)

@@ -30,7 +30,7 @@ and create a patch:
 ``git format-patch -o patch/ <commit>``
 
 To create patchsets use the following commands:
-``git format-patch -n --cover-letter <commit1>..<commit2>``
+``git format-patch -o patch/ -n --cover-letter <commit1>..<commit2>``
 
 Now, you need to replace ``***SUBJECT HERE***`` with the subject
 and ``***BLURB HERE***`` with a description.
