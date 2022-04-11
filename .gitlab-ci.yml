@@ -14,6 +14,6 @@ build:
   # instead of calling g++ directly you can also use some build toolkit like make
   # install the necessary build tools when needed
   before_script:
-    - apt update && apt -y install make gdb
+    - apt update && apt -y install make gdb as
   script:
-    - CC=gcc GDB=gdb make V=1
+    - CC=gcc GDB=gdb AS=as LD=ld make V=1
