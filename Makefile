@@ -18,7 +18,7 @@ SUBDIRS := cpu drivers libc kernel
 
 DOC_NAMES := latexpdf html
 
-CC = i386-elf-gcc
+CC ?= i386-elf-gcc
 GDB ?= i386-elf-gdb
 
 MAKEFLAGS += -rR
