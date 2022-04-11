@@ -18,10 +18,18 @@ SUBDIRS := cpu drivers libc kernel
 
 DOC_NAMES := latexpdf html
 
-CC ?= i386-elf-gcc
+ifeq ($(origin CC),default)
+CC = i386-elf-gcc
+endif
 GDB ?= i386-elf-gdb
+ifeq ($(origin AS),default)
+AS = i386-elf-as
+endif
+ifeq ($(origin LD),default)
+LD = i386-elf-ld
+endif
 
-MAKEFLAGS += -rR
+MAKEFLAGS += -rR --no-builtin-variables
 CFLAGS ?= -g -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector -nostartfiles -nodefaultlibs \
 		 -Wall -Wextra
 
@@ -58,7 +66,7 @@ ifneq ($(findstring s,$(filter-out --%,$(MAKEFLAGS))),)
 	VERBOSE = 0
 endif
 
-export quiet Q VERBOSE
+export quiet Q VERBOSE CC CFLAGS AS LD
 
 __all: options $(SUBDIRS) os-image.bin
 
@@ -99,18 +107,18 @@ os-image-debug.bin: boot/boot.bin kernel.bin $(OBJ)
 	$(Q)cat $^ > os-image-debug.bin
 
 kernel.bin: boot/kernel_entry.o $(OBJ) cpu/interrupt.o
-	$(Q)i386-elf-ld -o $@ -Ttext 0x1000 $^ --oformat binary
+	$(Q)$(LD) -o $@ -Ttext 0x1000 $^ --oformat binary
 
 # '--oformat binary' deletes all symbols as a collateral, so we don't need
 # to 'strip' them manually on this case
 # kernel.bin: boot/kernel_entry.o ${OBJ}
-# 	i386-elf-ld -o $@ -T linker.ld $^ --oformat binary
+# 	$(LD) -o $@ -T linker.ld $^ --oformat binary
 
 # cpu/interrupt.o: cpu/interrupt.asm
 # 	nasm $< -f elf -o $@
 
 boot/boot.o: boot/boot.s
-	$(Q)i386-elf-as boot/boot.s -o boot/boot.o
+	$(Q)$(AS) boot/boot.s -o boot/boot.o
 
 # kernel.o: kernel/kernel.c $(OBJ) cpu/interrupt.o
 # 	@$(CC_CMD)
@@ -118,7 +126,7 @@ boot/boot.o: boot/boot.s
 
 # Used for debugging purposes
 kernel.elf: ${OBJ}
-	$(Q)i386-elf-ld -o $@ -Ttext 0x1000 $^
+	$(Q)$(LD) -o $@ -Ttext 0x1000 $^
 
 run: os-image.bin
 	$(Q)qemu-system-i386 -kernel os-image.bin
@@ -163,4 +171,4 @@ patchclean:
 	$(Q)rm -rf patch/*
 
 
-.PHONY: cpu drivers $(SUBDIRS)
+.PHONY: $(SUBDIRS)

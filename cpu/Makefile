@@ -1,9 +1,6 @@
 CC_CMD = @echo "CC $@"
 MAKE_CMD = @echo "MAKE $@"
 
-CC = i386-elf-gcc
-GDB ?= i386-elf-gdb
-
 all: idt.o isr.o ports.o timer.o
 
 idt.o: idt.c idt.h

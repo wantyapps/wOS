@@ -1,9 +1,6 @@
 CC_CMD = @echo "CC $@"
 MAKE_CMD = @echo "MAKE $@"
 
-CC = i386-elf-gcc
-GDB ?= i386-elf-gdb
-
 all: screen.o keyboard.o
 
 screen.o: screen.c screen.h
