@@ -7,3 +7,6 @@ Known Bugs
 
   Resort to using `make debug` and `c` to continue in gdb to launch it
   with a different bootloader.
+
+* GitLab CI/CD Doesn't work.
+  It just doesn't want to.
