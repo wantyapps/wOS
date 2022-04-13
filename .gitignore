@@ -11,6 +11,7 @@ boot/*.o
 boot/*.bin
 *.o
 *.iso
+**/*.gcno
 
 Documentation/build
 patch
