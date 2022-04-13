@@ -33,12 +33,12 @@ MAKEFLAGS += -rR --no-builtin-variables
 CFLAGS ?= -g -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector -nostartfiles -nodefaultlibs \
 		 -Wall -Wextra
 
-ifeq ($(OS), Windows_NT)
+ifeq ($(OS),Windows_NT)
 $(error Don't build this on Windows.)
 else
 UNAME_S = $(shell uname -s)
 endif
-ifeq ($(UNAME_S), Darwin)
+ifeq ($(UNAME_S),Darwin)
 OS = macOS
 else
 OS = Not Detected
