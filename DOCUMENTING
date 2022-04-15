@@ -1,0 +1,55 @@
+Kernel Docs - Help Wanted!
+==========================
+
+What file to document?
+----------------------
+
+Almost every file in:
+
+- cpu/
+- drivers/
+- kernel/
+
+Rules
+-----
+
+All public (accessible) functions need to be documented.
+Documentation can vary: One function can have a single sentence documentation,
+while other functions can have long and detailed explanations.
+
+Syntax
+------
+
+Documentation blocks have the following syntax:
+
+```c
+/* Title of function/quick explanation
+ * Description - What arguments are used etc. (Can be multiple lines if needed)
+ *
+ * Declaration
+ */
+```
+
+For example:
+
+```c
+/* sum - return sum of two numbers
+ * When given two integer arguments (x,y), the function will
+ * return the sum of the two arguments.
+ *
+ * int sum(int x, int y)
+ */
+int sum(int x, int y) {
+	return x + y;
+}
+```
+
+What _NOT_ to Document
+----------------------
+
+Simple functions that show exactly what they are doing in their declaration/source code
+do not need to be documented.
+
+For example:
+
+The function above (``sum``) does not need to be documented. _It was just an example._

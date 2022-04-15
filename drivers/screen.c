@@ -15,7 +15,7 @@ int get_offset_col(int offset);
  * Public Kernel API functions                            *
  **********************************************************/
 
-/**
+/*
  * Print a message on the specified location
  * If col, row, are negative, we will use the current offset
  */
@@ -30,7 +30,6 @@ void kprint_at(char *message, int col, int row, char attr) {
         col = get_offset_col(offset);
     }
 
-    /* Loop through message and print it */
     int i = 0;
     while (message[i] != 0) {
         offset = print_char(message[i++], col, row, attr);
@@ -57,7 +56,7 @@ void kprint_backspace() {
  **********************************************************/
 
 
-/**
+/*
  * Innermost print function for our kernel, directly accesses the video memory 
  *
  * If 'col' and 'row' are negative, we will print at current cursor location
