@@ -1,8 +1,8 @@
 VERSION = 1
-PATCHLEVEL = 3
-SUBLEVEL = 1
-EXTRAVERSION =
-NAME = vinyl
+PATCHLEVEL = 4
+SUBLEVEL = 0
+EXTRAVERSION = -rc1
+NAME = not_windows
 
 $(if $(filter __%, $(MAKECMDGOALS)), \
 	$(error targets prefixed with '__' are only for internal use))

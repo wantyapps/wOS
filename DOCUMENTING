@@ -1,7 +1,7 @@
 Kernel Docs - Help Wanted!
 ==========================
 
-What file to document?
+What files to document?
 ----------------------
 
 Almost every file in:
@@ -26,7 +26,7 @@ Documentation blocks have the following syntax:
 /* Title of function/quick explanation
  * Description - What arguments are used etc. (Can be multiple lines if needed)
  *
- * Declaration
+ * Function Declaration if the function has arguments.
  */
 ```
 

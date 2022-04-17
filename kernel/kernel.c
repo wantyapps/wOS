@@ -5,6 +5,10 @@
 #include "../libc/string.h"
 #include "kernelversion.h"
 
+/* kmain - Kernel main function
+ * This function is called from the bootloader
+ and is the startup function for the kernel
+ */
 void kmain() {
 	isr_install();
 	kernelLogPrint("Initialized ISR\n", "info");
@@ -24,24 +28,30 @@ void kmain() {
         "Use 'HALT', 'EXIT' or 'END' to halt the CPU.\nwOS>", WHITE_ON_BLACK);
 }
 
-/* void addToLogBuffer(){} */
+/* printLogBuffer - Print log buffer
+ * Print all messages in the log buffer provided
+   in the `log` argument
+ * 
+ * void printLogBuffer(char *log)
+ */
 void printLogBuffer(char *log) {
-	for ( int i = 0; i <= sizeof &log / sizeof(log[0]); i++ ) {
-	/* for ( int i = 0; i <= sizeof *log; i++ ) { */
-		/* char testLog[][1000] = {"test1", "\ntest2"}; */
-		/* kprint(testLog[i], WHITE_ON_BLACK); */
-		/* kprint("\n", WHITE_ON_BLACK); */
+	for ( int i = 0; i <= sizeof *log / sizeof(&log[0]); i++ ) {
 		kprint(&log[i], WHITE_ON_BLACK);
-		/* kprint("\n", WHITE_ON_BLACK); */
-		/* kprint("\n", WHITE_ON_BLACK); */
 	}
-	/* kprint(&log[0], WHITE_ON_BLACK); */
-	/* kprint(&log[1], WHITE_ON_BLACK); */
-	/* kprint(&log[2], WHITE_ON_BLACK); */
 }
 
+/* credits - Print basic maintainer credits
+ * This function isn't called directly anymore.
+ * It is called from pressing "CTRL".
+ *
+ * `caller` is used for fixing certain bugs with
+   the prompt not showing. We are planning to add
+   more options and usages for this argument.
+ *
+ * void credits(char *caller)
+ */
 void credits(char *caller) {
-	if ( strcmp(caller, "keyboard") == 0 ) {
+	if (strcmp(caller, "keyboard") == 0) {
 		kprint("\nCREDITS\n\n", WHITE_ON_BLACK);
 		kprint("Uri Arev - Maintainer\n", WHITE_ON_BLACK);
 		kprint("Yuval Maya - Maintainer\n", WHITE_ON_BLACK);
@@ -50,27 +60,45 @@ void credits(char *caller) {
 	}
 }
 
+/* __foff - Internal
+ * Don't ask.
+ */
 static void __foff() {
 	kprint("FUCK OFF\n", RED_ON_BLACK);
 	kprint("-Yuval", GREEN_ON_BLACK);
 }
 
+/* kernelLogPrint - Print log messages.
+ * Print log messages with colors to the console
+   (see TESTCOLORS)
+ *
+ * This will print the `string` argument's value
+   prefixed with the debug level matching the `level`
+   argument
+ *
+ * void kernelLogPrint(char *string, char *level)
+ */
 void kernelLogPrint(char *string, char *level) {
-	if ( strcmp(level, "info") == 0 ) {
+	if (strcmp(level, "info") == 0) {
 		kprint("[INFO] ", GRAY_ON_BLACK);
 		kprint(string, GRAY_ON_BLACK);
-	} else if ( strcmp(level, "warn") == 0 ) {
+	} else if (strcmp(level, "warn") == 0) {
 		kprint("[WARN] ", YELLOW_ON_BLACK);
 		kprint(string, WHITE_ON_BLACK);
-	} else if ( strcmp(level, "error") == 0 ) {
+	} else if (strcmp(level, "error") == 0) {
 		kprint("[ERR] ", RED_ON_BLACK);
 		kprint(string, WHITE_ON_BLACK);
-	} else if ( strcmp(level, "success") == 0 ) {
+	} else if (strcmp(level, "success") == 0) {
 		kprint("[SUCCESS] ", GREEN_ON_BLACK);
 		kprint(string, WHITE_ON_BLACK);
 	}
 }
 
+/* __commandNotFound - Internal - Print "command not found"
+ * Used situations when a command a user types does not exist
+ *
+ * static void __commandNotFound(char *input)
+ */
 static void __commandNotFound(char *input) {
 	kprint("*** ", RED_ON_BLACK);
 	kprint("wOS: ", WHITE_ON_BLACK);
@@ -78,13 +106,28 @@ static void __commandNotFound(char *input) {
 	kprint(": Command not found.", WHITE_ON_BLACK);
 }
 
-int word_center_screen_center(char *string) {
-	if ( strlen(string) % 2 == 1 ) {
+/* wcsc - Deprecated
+ * Yuval and Uri tried making a function to
+   display messages at the center of the screen.
+   They both gave up.
+ *
+ * wscs stands for "word-center-screen-center" (old name)
+ *
+ * int wscs(char *string)
+ */
+int wcsc(char *string) {
+	if (strlen(string) % 2 == 1) {
 		append(string, ' ');
 	}
 	return MAX_COLS / 2 - strlen(string) / 2;
 }
 
+/* __usage - Internal - Display help message
+ * Used to display a simple command list for
+   the `HELP` command
+ *
+ * static void __usage()
+ */
 static void __usage() {
 	kprint("Usage:\n", WHITE_ON_BLACK);
 	kprint("COMMAND                HELP\n", WHITE_ON_BLACK);
@@ -95,6 +138,15 @@ static void __usage() {
 	kprint("VERSION                Show wOS Version", WHITE_ON_BLACK);
 }
 
+/* user_input - Process user input
+ * Process user input/commands - Will be replaced
+   soon for a nicer (non-blocky) code (maybe switch?)
+ * 
+ * This should not be called from the main kernel source
+   code file.
+ *
+ * void user_input(char *input, char *prompt)
+ */
 void user_input(char *input, char *prompt) {
 	if (strcmp(input, "") == 0) {
 		kprint(prompt, WHITE_ON_BLACK);
@@ -103,13 +155,13 @@ void user_input(char *input, char *prompt) {
 		int j = 0;
 		int ctr = 0;
 		char inputWords[100][100];
-		for(int i = 0; i <= (strlen(input)); i++) {
-			if(input[i] == ' ' || input[i] == '\0') {
+		for (int i = 0; i <= (strlen(input)); i++) {
+			if (input[i] == ' ' || input[i] == '\0') {
 			    inputWords[ctr][j]='\0';
 			    ctr++;
 			    j=0;
 			} else {
-			    inputWords[ctr][j]=input[i];
+			    inputWords[ctr][j] = input[i];
 			    j++;
 			}
 		}
@@ -138,7 +190,7 @@ void user_input(char *input, char *prompt) {
 			kprint("  \\_/\\_/  \\___/|____/", WHITE_ON_BLACK);
 		} else if (strcmp(input, "LOG") == 0) {
 			char testLog[][1000] = {"test1", "test2"};
-			printLogBuffer(testLog);
+			printLogBuffer(*testLog);
 		} else {
 			__commandNotFound(input);
 		}

@@ -1,15 +1,21 @@
 Building wOS
 ============
 
-Building the Whole OS
----------------------
-Generally, if you want to build the operating system, just use ``make``.
+Building the kernel
+-------------------
+Use ``make`` to build the kernel.
 
 Default Configurations
 ----------------------
 This kernel was generally created on macOS, so the default compiler is ``i386-elf-gcc``. If you wish to change that value, use ``CC=<compiler>`` before ``make``.
 
 You should probably not change ``CFLAGS``.
+
+Arguments
+---------
+We recommend using these arguments to build wOS:
+``V=1`` enables verbosity (see commands and when make enters directories)
+``--always-make`` always make: rebuild files even if they are not changed.
 
 Modules
 -------

@@ -6,6 +6,6 @@ void printLicense(char *license[]);
 void printLogBuffer(char *log);
 void kernelLogPrint(char *string, char *level);
 void credits(char *caller);
-int word_center_screen_center(char *string);
+int wcsc(char *string);
 
 #endif
