@@ -35,7 +35,7 @@ static void __keyboard_callback(registers_t regs) {
 		kprint_backspace();
 	} else if (scancode == ENTER) {
 		kprint("\n", WHITE_ON_BLACK);
-		user_input(key_buffer, "wOS>");
+		user_input(key_buffer);
 		key_buffer[0] = '\0';
 	} else if (scancode == LCTRL) { // Not the best idea
 		kprint("\n", WHITE_ON_BLACK);

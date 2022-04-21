@@ -25,7 +25,8 @@ void kmain() {
 	kprint(".\n", WHITE_ON_BLACK);
 	/* printLicense(license); */
 	kprint("Use 'HELP' or 'USAGE' to see a list of commands.\n"
-        "Use 'HALT', 'EXIT' or 'END' to halt the CPU.\nwOS>", WHITE_ON_BLACK);
+        "Use 'HALT', 'EXIT' or 'END' to halt the CPU.", WHITE_ON_BLACK);
+	prompt("\n", "wOS>");
 }
 
 /* printLogBuffer - Print log buffer
@@ -38,6 +39,18 @@ void printLogBuffer(char *log) {
 	for ( int i = 0; i <= sizeof *log / sizeof(&log[0]); i++ ) {
 		kprint(&log[i], WHITE_ON_BLACK);
 	}
+}
+
+/* prompt - Display a prompt
+ * Display a shell prompt provided in the `prompt`
+   argument with a prefix provided in the `prefix`
+   argument
+ *
+ * void prompt(char *prefix, char *prompt)
+ */
+void prompt(char *prefix, char *prompt) {
+	kprint(prefix, WHITE_ON_BLACK);
+	kprint(prompt, WHITE_ON_BLACK);
 }
 
 /* credits - Print basic maintainer credits
@@ -56,7 +69,7 @@ void credits(char *caller) {
 		kprint("Uri Arev - Maintainer\n", WHITE_ON_BLACK);
 		kprint("Yuval Maya - Maintainer\n", WHITE_ON_BLACK);
 		kprint("Eytam P. - Contributor/Release names\n", WHITE_ON_BLACK);
-		kprint("wOS>", WHITE_ON_BLACK);
+		prompt("", "wOS>");
 	}
 }
 
@@ -145,11 +158,11 @@ static void __usage() {
  * This should not be called from the main kernel source
    code file.
  *
- * void user_input(char *input, char *prompt)
+ * void user_input(char *input)
  */
-void user_input(char *input, char *prompt) {
+void user_input(char *input) {
 	if (strcmp(input, "") == 0) {
-		kprint(prompt, WHITE_ON_BLACK);
+		prompt("", "wOS>");
 	}
 	if (strlen(input) > 0) {
 		int j = 0;
@@ -194,6 +207,6 @@ void user_input(char *input, char *prompt) {
 		} else {
 			__commandNotFound(input);
 		}
-		kprint("\nwOS>", WHITE_ON_BLACK);
+		prompt("\n", "wOS>");
 	}
 }
