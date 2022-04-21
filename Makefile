@@ -66,6 +66,19 @@ ifneq ($(findstring s,$(filter-out --%,$(MAKEFLAGS))),)
 	VERBOSE = 0
 endif
 
+ifeq ("$(origin HEXD)", "command line")
+	HEXD=$(HEXD)
+endif
+ifndef HEXD
+	HEXD=0
+endif
+
+ifeq ($(HEXD),1)
+	HEXDUMP=hexdump
+else
+	HEXDUMP=
+endif
+
 export quiet Q VERBOSE CC CFLAGS AS LD
 
 __all: options $(SUBDIRS) os-image.bin
@@ -102,6 +115,10 @@ options:
 os-image.bin: boot/boot.o $(OBJ)
 	@$(CC_CMD)
 	$(Q)$(CC) -T linker.ld -o os-image.bin -ffreestanding -O2 -nostdlib $^
+	$(Q)if [ ! -z $(HEXDUMP) ]; then \
+		$(HEXDUMP) $@; \
+	fi
+
 
 os-image-debug.bin: boot/boot.bin kernel.bin $(OBJ)
 	$(Q)cat $^ > os-image-debug.bin
