@@ -1,9 +1,9 @@
 #ifndef KERNELVERSION
 #define KERNELVERSION
 #define VERSION 1
-#define PATCHLEVEL 4
+#define PATCHLEVEL 5
 #define SUBLEVEL 0
-#define EXTRAVERSION "-rc1"
-#define NAME "not_windows"
-#define FULLVERSION "1.4.0-rc1 (not_windows)"
+#define EXTRAVERSION ""
+#define NAME "7inch"
+#define FULLVERSION "1.5.0 (7inch)"
 #endif

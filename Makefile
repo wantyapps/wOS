@@ -1,8 +1,9 @@
 VERSION = 1
-PATCHLEVEL = 4
+PATCHLEVEL = 5
 SUBLEVEL = 0
-EXTRAVERSION = -rc1
-NAME = not_windows
+EXTRAVERSION =
+NAME = 7inch
+FULLVERSION = 1.5.0 (7inch)
 
 $(if $(filter __%, $(MAKECMDGOALS)), \
 	$(error targets prefixed with '__' are only for internal use))
@@ -81,8 +82,10 @@ endif
 
 export quiet Q VERBOSE CC CFLAGS AS LD
 
+PHONY += __all
 __all: options $(SUBDIRS) os-image.bin
 
+PHONY += help
 help:
 	@echo "Cleaning targets:"
 	@echo "  clean           - Remove most generated files"
@@ -102,8 +105,9 @@ help:
 	@echo "  patchclean      - Remove all patches left"
 	@echo "  createpatches 1=<commit1> 2=<commit2> - Create patches from commits"
 
+PHONY += options
 options:
-	$(Q)scripts/logo.sh @echo "Building wOS Kernel version $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION) ($(NAME))"
+	$(Q)scripts/make/logo.sh @echo "Building wOS Kernel version $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION) ($(NAME))"
 	@echo "OS 		: $(OS)"
 	@echo "CC		: $(CC)"
 	@echo "CFLAGS  	: $(CFLAGS)"
@@ -145,9 +149,11 @@ boot/boot.o: boot/boot.s
 kernel.elf: ${OBJ}
 	$(Q)$(LD) -o $@ -Ttext 0x1000 $^
 
+PHONY += run
 run: os-image.bin
 	$(Q)qemu-system-i386 -kernel os-image.bin
 
+PHONY += debug
 debug: os-image-debug.bin kernel.elf
 	$(Q)qemu-system-i386 -s -fda os-image-debug.bin &
 	$(Q)$(GDB) -ex "target remote localhost:1234" -ex "symbol-file kernel.elf"
@@ -165,13 +171,16 @@ debug: os-image-debug.bin kernel.elf
 $(DOC_NAMES):
 	$(Q)$(MAKE) -C Documentation $@
 
+PHONY += iso
 iso: os-image.bin
 	$(Q)cp os-image.bin isodir/boot
 	$(Q)grub-mkrescue -o wOS.iso isodir/
 
+PHONY += $(SUBDIRS)
 $(SUBDIRS):
 	$(Q)$(MAKE) -C $@
 
+PHONY += clean
 clean:
 	$(Q)rm -rf *.bin *.dis *.o *.elf *.iso
 	$(Q)rm -rf boot/*.bin boot/*.o
@@ -181,11 +190,13 @@ clean:
 	$(Q)$(MAKE) -C libc clean
 	$(Q)$(MAKE) -C kernel clean
 
+PHONY += createpatches
 createpatches: patchclean
 	$(Q)git format-patch -o patch/ -n --cover-letter $(1)..$(2)
 
+PHONY += patchclean
 patchclean:
 	$(Q)rm -rf patch/*
 
 
-.PHONY: $(SUBDIRS)
+.PHONY: $(PHONY)
