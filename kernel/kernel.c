@@ -35,9 +35,9 @@ void kmain() {
  * 
  * void printLogBuffer(char *log)
  */
-void printLogBuffer(char *log) {
-	for ( int i = 0; i <= sizeof *log / sizeof(&log[0]); i++ ) {
-		kprint(&log[i], WHITE_ON_BLACK);
+void printLogBuffer(char **log) {
+	for ( int i = 0; i <= sizeof *log / sizeof(log[0]); i++ ) {
+		kprint(log[i], WHITE_ON_BLACK);
 	}
 }
 
@@ -203,7 +203,7 @@ void user_input(char *input) {
 			kprint("  \\_/\\_/  \\___/|____/", WHITE_ON_BLACK);
 		} else if (strcmp(input, "LOG") == 0) {
 			char testLog[][1000] = {"test1", "test2"};
-			printLogBuffer(*testLog);
+			printLogBuffer(testLog);
 		} else {
 			__commandNotFound(input);
 		}
