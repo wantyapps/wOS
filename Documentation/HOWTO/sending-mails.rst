@@ -11,8 +11,6 @@ created by ``git-send-mail``
 The body must have an explanation of what the feature is and
 the files changed (or just a diff)
 
-We are working on a mailing list, but it's still not perfect.
-
 Creating Patches
 ----------------
 Much like the Linux patch-mailing way, use the following commands to
@@ -51,6 +49,9 @@ Sending Patches with Git-send-mail
 You can also send patches with ``scripts/send_all_patches.sh``.
 
 Usage:
-``./make_scripts/send_all_patches.sh``
+``./scripts/send_all_patches.sh``
 
 This will send all patches to Uri Arev (me@wantyapps.xyz).
+
+You can also edit the script (``send_all_patches.sh``) to send to the mailing list
+that is located at ``wos@wantyapps.xyz``.
