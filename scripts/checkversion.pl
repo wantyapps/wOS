@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# use strict;
+# Why "use strict" anyway
 
 sub usage {
 	print "Usage: checkversion.pl\n";
