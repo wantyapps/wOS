@@ -17,8 +17,8 @@ void kmain() {
 	/* kprint_at("FUCK OFF", word_center_screen_center("FUCK OFF"), MAX_ROWS / 2, RED_ON_BLACK); */
 	/* kprint_at("-Yuval", word_center_screen_center("-Yuval"), MAX_ROWS / 2 + 1, 0x02); */
 	/* clear_screen(); */
-	kernelLogPrint("This is wOS Version ", "info");
-	kprint(FULLVERSION, GRAY_ON_BLACK);
+	kprint("This is wOS version ", WHITE_ON_BLACK);
+	kprint(FULLVERSION, WHITE_ON_BLACK);
 	kprint("\n", WHITE_ON_BLACK);
 	kprint("Welcome to ", WHITE_ON_BLACK);
 	kprint("wOS", GREEN_ON_BLACK);
@@ -188,8 +188,8 @@ void user_input(char *input) {
 		} else if (strcmp(input, "HELP") == 0 || strcmp(input, "USAGE") == 0) {
 			__usage();
 		} else if (strcmp(input, "VERSION") == 0) {
-			kernelLogPrint("This is wOS Version ", "info");
-			kprint(FULLVERSION, GRAY_ON_BLACK);
+			kprint("This is wOS version ", WHITE_ON_BLACK);
+			kprint(FULLVERSION, WHITE_ON_BLACK);
 		} else if (strcmp(input, "TESTCOLORS") == 0 || strcmp(input, "COLORTEST") == 0) {
 			kernelLogPrint("Info test\n", "info");
 			kernelLogPrint("Warn test\n", "warn");
