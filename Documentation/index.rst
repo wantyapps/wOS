@@ -9,7 +9,7 @@ This is the top level file of the documentation tree. Keep in mind that the whol
 is still work in progress. I am trying to update it every time I add a feature, but it takes
 time! Stay tuned...
 
-Uri
+Uri <me@wantyapps.xyz>
 
 
 .. toctree::
