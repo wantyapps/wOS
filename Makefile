@@ -20,14 +20,14 @@ SUBDIRS := cpu drivers libc kernel
 DOC_NAMES := latexpdf html
 
 ifeq ($(origin CC),default)
-CC = i386-elf-gcc
+CC = i686-elf-gcc
 endif
-GDB ?= i386-elf-gdb
+GDB ?= i686-elf-gdb
 ifeq ($(origin AS),default)
-AS = i386-elf-as
+AS = i686-elf-as
 endif
 ifeq ($(origin LD),default)
-LD = i386-elf-ld
+LD = i686-elf-ld
 endif
 
 MAKEFLAGS += -rR --no-builtin-variables
@@ -36,13 +36,6 @@ CFLAGS ?= -g -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector -nostart
 
 ifeq ($(OS),Windows_NT)
 $(error Don't build this on Windows.)
-else
-UNAME_S = $(shell uname -s)
-endif
-ifeq ($(UNAME_S),Darwin)
-OS = macOS
-else
-OS = Not Detected
 endif
 
 # Straight up copied from linux/Makefile
@@ -108,8 +101,10 @@ help:
 PHONY += options
 options:
 	$(Q)scripts/make/logo.sh @echo "Building wOS Kernel version $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION) ($(NAME))"
-	@echo "OS 		: $(OS)"
 	@echo "CC		: $(CC)"
+	@echo "AS 		: $(AS)"
+	@echo "LD 		: $(LD)"
+	@echo "GDB 		: $(GDB)"
 	@echo "CFLAGS  	: $(CFLAGS)"
 	@echo "gdb		: $(GDB)"
 	@echo "C_SOURCE 	: $(C_SOURCES)"
