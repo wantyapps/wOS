@@ -5,5 +5,5 @@ The wOS kernel
 
 This project's documentation is written mostly in (reStructuredText).
 
-To build the documentation use ``make html`` or `make latexpdf``
+To build the documentation use ``make html`` or ``make latexpdf``
 They will be built into Documentation/build/<type>/
