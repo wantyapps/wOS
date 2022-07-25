@@ -3,7 +3,7 @@ PATCHLEVEL = 5
 SUBLEVEL = 1
 EXTRAVERSION =
 NAME = 7inch
-FULLVERSION = 1.5.0 (7inch)
+FULLVERSION = 1.5.1 (7inch)
 
 $(if $(filter __%, $(MAKECMDGOALS)), \
 	$(error targets prefixed with '__' are only for internal use))

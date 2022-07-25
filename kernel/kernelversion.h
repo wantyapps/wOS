@@ -5,5 +5,5 @@
 #define SUBLEVEL 2
 #define EXTRAVERSION ""
 #define NAME "7inch"
-#define FULLVERSION "1.5.0 (7inch)"
+#define FULLVERSION "1.5.1 (7inch)"
 #endif
