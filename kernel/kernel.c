@@ -195,6 +195,8 @@ void user_input(char *input) {
 			kernelLogPrint("Warn test\n", "warn");
 			kernelLogPrint("Error test\n", "error");
 			kernelLogPrint("Success test", "success");
+		} else if (strcmp(input, "TESTSCREEN") == 0 || strcmp(input, "SCREENTEST") == 0) {
+			test_screen();
 		} else if (strcmp(input, "LOGO") == 0) {
 			kprint("           ___  ____\n", WHITE_ON_BLACK);
 			kprint("__      __/ _ \\/ ___|\n", WHITE_ON_BLACK);
